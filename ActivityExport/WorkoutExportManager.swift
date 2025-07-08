@@ -199,7 +199,9 @@ class WorkoutExportManager: ObservableObject {
     let dateString = dateFormatter.string(from: workout.startDate)
 
     let activityType = workout.workoutActivityType.displayName
-    return "\(activityType)-\(dateString).gpx"
+    let shortUUID = String(workout.uuid.uuidString.prefix(8))
+
+    return "\(activityType)-\(dateString)-\(shortUUID).gpx"
   }
 
   private func generateGPX(from locations: [CLLocation], workout: HKWorkout) -> Data {
@@ -215,12 +217,12 @@ class WorkoutExportManager: ObservableObject {
       )
     }
 
-    // Create GPX track with required parameters
+    // Create GPX track with required parameters including UUID in description
     let track = GPXTrack(
       date: workout.startDate,
       title:
         "\(workout.workoutActivityType.displayName) - \(DateFormatter.localizedString(from: workout.startDate, dateStyle: .short, timeStyle: .short))",
-      description: "Exported from HealthKit workout data",
+      description: "Exported from HealthKit workout data. UUID: \(workout.uuid.uuidString)",
       trackPoints: trackPoints,
       type: workout.workoutActivityType.displayName.lowercased()
     )
@@ -258,18 +260,33 @@ class WorkoutExportManager: ObservableObject {
     // Remove existing file if it exists
     try? fileManager.removeItem(at: archiveURL)
 
-    // Create tar archive
-    var tarData = Data()
+    // Create all tar entries first
+    var tarEntries: [TarEntry] = []
+    let totalFiles = files.count
 
-    for fileURL in files {
+    for (index, fileURL) in files.enumerated() {
+      // Update progress for tar creation (90% to 95%)
+      let tarProgress = 0.9 + (Double(index) / Double(totalFiles)) * 0.05
+      await MainActor.run {
+        self.progress = tarProgress
+        self.statusMessage = "Creating archive... (\(index + 1)/\(totalFiles))"
+      }
+
       let fileData = try Data(contentsOf: fileURL)
       let fileName = fileURL.lastPathComponent
 
-      // Create tar entry
-      let tarEntry = try TarContainer.create(
-        from: [TarEntry(info: TarEntryInfo(name: fileName, type: .regular), data: fileData)]
-      )
-      tarData.append(tarEntry)
+      // Create tar entry (but don't create the container yet)
+      let tarEntry = TarEntry(info: TarEntryInfo(name: fileName, type: .regular), data: fileData)
+      tarEntries.append(tarEntry)
+    }
+
+    // Create a single tar container with all entries
+    let tarData = try TarContainer.create(from: tarEntries)
+
+    // Update progress for compression (95% to 100%)
+    await MainActor.run {
+      self.progress = 0.95
+      self.statusMessage = "Compressing archive..."
     }
 
     // Compress with gzip
