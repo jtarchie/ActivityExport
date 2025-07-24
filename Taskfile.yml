@@ -5,4 +5,5 @@ tasks:
     desc: "Run the default task"
     cmds:
       - swift-format --recursive -i .
+      - deno fmt .
       - periphery scan

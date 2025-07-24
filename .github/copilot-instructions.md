@@ -1,10 +1,35 @@
 # Project Overview
 
-This repository contains an iOS app called "ActivityExport" that exports HealthKit workout activities as GPX files. The app uses Swift, SwiftUI, and integrates with HealthKit, GPXKit, and SWCompression for exporting and archiving workout data.
+This repository contains an iOS app called "ActivityExport" that exports
+HealthKit workout activities as GPX files. The app uses Swift, SwiftUI, and
+integrates with HealthKit, GPXKit, and SWCompression for exporting and archiving
+workout data.
+
+## Product Description
+
+ActivityExport is a utility iOS app that helps users export their Apple Health
+workout route data to standard GPX format. Key features include:
+
+- Export workout routes from HealthKit to industry-standard GPX files
+- Support for various workout types including running, walking, cycling, hiking,
+  and more
+- Batch processing of multiple workouts into a single compressed archive
+- Preserves workout metadata including activity type, date, time, and unique
+  identifiers
+- Shows export progress with visual indicators and status updates
+- Generates shareable archives that can be sent to other apps or devices
+- Maintains privacy by requiring explicit user consent for HealthKit access
+- Handles device-specific data access and permissions gracefully
+- Provides a clean, native iOS interface following Apple's design guidelines
+
+The app is intended for fitness enthusiasts who want to analyze their workout
+data in third-party tools, backup their routes, or share their activities with
+others using the widely-supported GPX format.
 
 ## Folder Structure
 
-- `/ActivityExport/`: Main app source code, including SwiftUI views and managers.
+- `/ActivityExport/`: Main app source code, including SwiftUI views and
+  managers.
 - `/ActivityExportTests/`: Unit tests for the app.
 - `/ActivityExportUITests/`: UI tests for the app.
 - `/ActivityExport.xcodeproj/`: Xcode project files and configuration.
@@ -51,4 +76,5 @@ This repository contains an iOS app called "ActivityExport" that exports HealthK
 - All HealthKit access must be privacy-conscious and require user consent.
 - GPX files should include workout UUIDs for traceability.
 - The app should handle the absence of workouts gracefully.
-- Use the provided `Taskfile.yml` for formatting and static analysis before committing code.
+- Use the provided `Taskfile.yml` for formatting and static analysis before
+  committing code.
