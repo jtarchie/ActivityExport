@@ -7,8 +7,6 @@
 
 import Testing
 
-@testable import ActivityExport
-
 struct ActivityExportTests {
 
   @Test func example() async throws {
