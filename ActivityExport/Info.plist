@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>NSHealthShareUsageDescription</key>
-	<string>This app needs access to your workout data to export it as GPX files.</string>
+	<string>This app needs access to your workout data to export it as comprehensive GPX files including heart rate, pace, power, cadence, and other fitness metrics.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>This app needs access to your health data to export workout routes.</string>
+	<string>This app needs access to your health data to export detailed workout routes and performance metrics.</string>
 </dict>
 </plist>
